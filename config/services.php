@@ -34,4 +34,19 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'briva' => [
+        "client_id" => "MtrslSsfJGIOWXIuhol3Jw0iGv2qcbEc",
+        "secret_id" => "edNlUdDXzRXA9InW",
+        'production' => [
+            'institutionCode' => "ALPCR7697K7",
+            'url' => "https://partner.api.bri.co.id",
+            'coorporate_code' => "12605"
+        ],
+        'sandbox' => [
+            'institutionCode' => "J104408",
+            'url' => "https://sandbox.partner.api.bri.co.id",
+            'coorporate_code' => "77777"
+        ]
+    ]
+
 ];

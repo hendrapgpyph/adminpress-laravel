@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDarkModeIntoUser extends Migration
+class AddStatusCallback extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddDarkModeIntoUser extends Migration
      */
     public function up()
     {
-        Schema::table('users', function ($table) {
-            $table->integer('sandbox')->default(0);
+        Schema::table('transaction', function ($table) {
+            $table->enum('status_callback',['success','fail'])->nullable()->default(null);
         });
     }
 

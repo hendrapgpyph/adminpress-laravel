@@ -1,6 +1,6 @@
  @extends('layouts.appweb')
   @section('title')
- CRO App | Users
+  {{ config('app.name') }} | Users
  @endsection
  @section("content")
  <!-- ============================================================== -->
@@ -79,6 +79,7 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>Telepon</th>
+                            <th>Api Token</th>
                             <th>Actions</th>
                           </tr>
                         </thead>

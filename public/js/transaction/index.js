@@ -4,7 +4,7 @@ var jumlahSeluruh = 0;
 var indexContent = 0;
 
 $(document).ready(function(){
-    loadUsers();
+    loadTransaction();
 });
 
 function setPaging(show,between){
@@ -84,12 +84,12 @@ function setPaging(show,between){
         if(e.which == 13) {
           // $('#buttonSearchnya').focus();
           pageAktif = 0;
-          loadUsers();
+          loadTransaction();
         }
     });
     function pageGanti(index){
       pageAktif = index;
-      loadUsers(index);
+      loadTransaction(index);
     }
 
     function changePage(e){
@@ -100,127 +100,68 @@ function setPaging(show,between){
     function pervPage(){
     if (pageAktif != 0) {
       pageAktif--;
-      loadUsers();
+      loadTransaction();
     }
   }
 
   function nextPage(){
     if (indexContent != jumlahSeluruh) {
       pageAktif++;
-      loadUsers();
+      loadTransaction();
     }
   }
   function pageIndex(index){
       pageAktif = index;
-      loadUsers();
+      loadTransaction();
     }
-  function cariStaff(){
+  function cariTransaksi(){
 	 	pageAktif = 0;
-	  loadUsers();
+	  loadTransaction();
  }
 
   function pageShow(index){
 	  pageAktif = index;
-	  loadUsers();
+	  loadTransaction();
 	}
 
 // staff
-  function loadUsers(){
-    $('.tableStaff').loading('toggle');
+  function loadTransaction(){
+    $('.tableTransaksi').loading('toggle');
     var txt ="";
     page      = pageAktif + 1;
     var no    = (parseInt(pageAktif)*20)+1;
     var awal  = no;
-    var cari = $('#cariStaff').val();
-    $.getJSON(link+'/users/jsonListStaff?page='+page+'&cari='+cari,function(data){
-    // console.log(data)
-      jumlahSeluruh = data.total;
-      pageTotal = parseInt(Math.ceil(jumlahSeluruh/20));
-      $.each(data.data, function(key, val){
+    var cari = $('#cariTransaksi').val();
+    let range = $("#daterange").val();
+    $.getJSON(link+'/transaction/jsonListTransaksi?page='+page+'&cari='+cari+"&range="+range,function(data){
+        console.log(data)
+        jumlahSeluruh = data.total;
+        pageTotal = parseInt(Math.ceil(jumlahSeluruh/20));
+        $.each(data.data, function(key, val){
 
-        
-        txt += `<tr>
-                  <td align="left">${no}</td>
-                  <td align="left"><a href="${link+'/users/form?id='+val.id}">${val.name}</a></td>
-                  <td align="left">${val.telepon}</td>
-                  <td align="left">`;
-                  if(val.api_token != null && val.api_token != ""){
-                    txt += `${val.api_token.substring(1, 20)+"..."}
-                    <a href="#!"><i class="fa fa-copy" onclick="copyToken('${val.api_token}')"></i></a>`
-                  }else{
-                    txt += `-`;
-                  }
-        txt += `</td>
-                    <td align="left">
-                        <a href="${link+'/users/form?id='+val.id}" class="text-primary" data-placement="top" data-toggle="tooltip" title="Edit">
-                          <i class="ti-marker-alt"></i>
-                        </a>
-                        <a href="#!" onclick="deleteStaff(${val.id})" class="text-danger" data-placement="top" title="Delete" data-toggle="tooltip">
-                          <i class="ti-trash"></i>
-                        </a>
-                      </td>
-                </tr>
-                `;
-        indexContent = no;
-        no++;
+            indexContent = no;
+            no++;
       });
     }).done(function(){
       $('#displayPage').html((awal)+'-'+indexContent+'/'+jumlahSeluruh);
       $('#displayPage2').html((awal)+'-'+indexContent+'/'+jumlahSeluruh);
-      $('#tbodyListStaff').html(txt);
-      $('.tableStaff').loading('toggle');
+      $('#tbodyListTransaksi').html(txt);
+      $('.tableTransaksi').loading('toggle');
       // $('[data-toggle="tooltip"]').tooltip();
       setPaging(5,2);
       if (jumlahSeluruh == 0) {
-        $('#tbodyListStaff').html("<td colspan='4'><center>Data tidak ditemukan</center></td>");
+        $('#tbodyListTransaksi').html("<td colspan='4'><center>Data tidak ditemukan</center></td>");
       }
     });
   }
 
-  copyToken = (token) => {
-    $('body').append(`<input type='text' id='copy_text_command_field' value="${token}">`);
-    var copyText = document.getElementById("copy_text_command_field");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    document.execCommand("copy");
-    
-    Toast.fire({
-        icon: 'success',
-        title: 'Copied'
-    });
-    $("#copy_text_command_field").remove();
-  }
-
-  deleteStaff = (id) =>{
-     Swal.fire({
-        title: 'Apa anda Yakin?',
-        text: "",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Batal'
-      }).then((result) => {
-        if (result.value) {
-            Swal.fire({
-              title: 'Loading..',
-              html: '',
-              allowOutsideClick: false,
-              onOpen: () => {
-                swal.showLoading()
-              }
-            });
-            $.getJSON(link+"/users/hapusStaff?id="+id, function(data){
-               pageAktif = 0;
-                Swal.fire(
-                  'Proses berhasil',
-                  '',
-                  'success'
-                )
-               loadUsers();
-            });
-          
-        }
-      });
-  }
+  // Daterange picker
+  $('.input-daterange-datepicker').daterangepicker({
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-danger',
+        cancelClass: 'btn-inverse',
+        autoUpdateInput: false
+    },function(date_1, date_2) {
+        $('input[name="daterange"]').val(date_1.format('YYYY/MM/DD')+" - "+date_2.format('YYYY/MM/DD'));
+        cariTransaksi();
+});

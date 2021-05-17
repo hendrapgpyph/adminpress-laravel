@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="background: {{Auth::User()->dark_mode==1?'#383f48':'#fff'}}">
+<html lang="en" style="background: #fff">
 
 <head>
     <meta charset="utf-8">
@@ -19,9 +19,9 @@
     <!-- morris CSS -->
     <link href="{{url('template/assets/plugins/morrisjs/morris.css')}}" rel="stylesheet">
     <!-- Custom CSS -->
-    <link href='{{url("template/".(Auth::User()->dark_mode == 1?'dark-mode':'normal-mode')."/css/style.css")}}' class="themes-mode-css" rel="stylesheet">
+    <link href='{{url("template/normal-mode/css/style.css")}}' class="themes-mode-css" rel="stylesheet">
     <!-- You can change the theme colors from here -->
-    <link href="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/css/colors/'.(Auth::User()->dark_mode == 1?'default-dark':'blue').'.css')}}" class="themes-mode-css" id="theme" rel="stylesheet">
+    <link href="{{url('template/normal-mode/css/colors/'.(Auth::User()->sandbox == 1?'red':'blue').'.css')}}" class="themes-mode-css" id="theme" rel="stylesheet">
     <link href="{{url('template/assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="{{url('template/assets/plugins/fancybox/jquery.fancybox.css')}}">
     <link rel="stylesheet" href="{{url('template/assets/plugins/select2/dist/css/select2.min.css')}}" type="text/css" />
@@ -91,11 +91,7 @@
                             <img src="{{url('template/assets/images/logo-light-icon.png')}}" alt="homepage" class="light-logo" />
                         </b>
                         <!--End Logo icon -->
-                        <!-- Logo text --><span>
-                         <!-- dark Logo text -->
-                         <img src="{{url('/template/assets/images/logo-text.png')}}" alt="homepage" class="dark-logo" />
-                         <!-- Light Logo text -->    
-                         <img src="{{url('/template/assets/images/logo-light-text.png')}}" class="light-logo" alt="homepage" /></span> </a>
+                        <span><h4 style="display: inline-block;padding-left:10px;">JINOM BRIVA</h4></span> </a>
                 </div>
                 <!-- ============================================================== -->
                 <!-- End Logo -->
@@ -111,7 +107,7 @@
                         <!-- ============================================================== -->
                         <!-- Comment -->
                         <!-- ============================================================== -->
-                        <li class="nav-item dropdown">
+                        {{-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-muted text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-bell"></i>
                               <div class="notify notifAll" style="display: none;"> 
                                 <span class="heartbit"></span> <span class="point"></span> 
@@ -129,7 +125,7 @@
                                 </li>
                               </ul>
                             </div>
-                        </li>
+                        </li> --}}
                     </ul>
                     <!-- ============================================================== -->
                     <!-- User profile and search -->
@@ -138,10 +134,9 @@
                         <!-- ============================================================== -->
                         <!-- Search -->
                         <!-- ============================================================== -->
-                        {{-- <li class="nav-item hidden-sm-down search-box"> <a class="nav-link hidden-sm-down text-muted waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
-                            <form class="app-search">
-                                <input type="text" class="form-control" placeholder="Search & enter"> <a class="srh-btn"><i class="ti-close"></i></a> </form>
-                        </li> --}}
+                        <li class="nav-item hidden-sm-down search-box">
+                            <h4 class="text-white" style="padding: 15px 15px 0 0">{{Auth::User()->sandbox == 1?'Sandbox':'Production'}}</h4>
+                        </li>
                         <!-- ============================================================== -->
                         <!-- Profile -->
                         <!-- ============================================================== -->
@@ -172,8 +167,8 @@
                                     </li>
                                     <li role="separator" class="divider"></li>
                                     <li role="separator" class="divider"></li>
-                                    <li class="chooseThemeDark" style="display: {{Auth::User()->dark_mode == 1?'none':''}}"><a href="#" onclick="gantiTema(1)"><i class="ti-brush"></i> Dark Themes</a></li>
-                                    <li class="chooseThemeLight" style="display: {{Auth::User()->dark_mode == 0?'none':''}}"><a href="#" onclick="gantiTema(0)"><i class="ti-brush"></i> Light Themes</a></li>
+                                    <li class="chooseThemeDark" style="display: {{Auth::User()->sandbox == 1?'none':''}}"><a href="#" onclick="gantiTema(1)"><i class="ti-brush"></i> Sandbox</a></li>
+                                    <li class="chooseThemeLight" style="display: {{Auth::User()->sandbox == 0?'none':''}}"><a href="#" onclick="gantiTema(0)"><i class="ti-brush"></i> Production</a></li>
                                     <li><a href="{{ route('logout') }}" 
                                           onclick="event.preventDefault();
                                                   document.getElementById('logout-form').submit();">
@@ -241,15 +236,15 @@
     <script src="{{url('template/assets/plugins/bootstrap/js/popper.min.js')}}"></script>
     <script src="{{url('template/assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
-    <script class="themes-mode-script" src="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/js/jquery.slimscroll.js')}}"></script>
+    <script class="themes-mode-script" src="{{url('template/normal-mode/js/jquery.slimscroll.js')}}"></script>
     <!--Wave Effects -->
-    <script class="themes-mode-script" src="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/js/waves.js')}}"></script>
+    <script class="themes-mode-script" src="{{url('template/normal-mode/js/waves.js')}}"></script>
     <!--Menu sidebar -->
-    <script class="themes-mode-script" src="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/js/sidebarmenu.js')}}"></script>
+    <script class="themes-mode-script" src="{{url('template/normal-mode/js/sidebarmenu.js')}}"></script>
     <!--stickey kit -->
     <script src="{{url('template/assets/plugins/sticky-kit-master/dist/sticky-kit.min.js')}}"></script>
     <!--Custom JavaScript -->
-    <script class="themes-mode-script" src="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/js/custom.js')}}"></script>
+    <script class="themes-mode-script" src="{{url('template/normal-mode/js/custom.js')}}"></script>
     <!-- ============================================================== -->
     <!-- This page plugins -->
     <!-- ============================================================== -->
@@ -259,7 +254,7 @@
     <script src="{{url('template/assets/plugins/raphael/raphael-min.js')}}"></script>
     <script src="{{url('template/assets/plugins/morrisjs/morris.min.js')}}"></script>
     <script src="{{url('template/assets/plugins/styleswitcher/jQuery.style.switcher.js')}}"></script>
-    <script src="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/js/validation.js')}}"></script>
+    <script src="{{url('template/normal-mode/js/validation.js')}}"></script>
     <!-- Sweet-Alert  -->
     <script src="{{url('template/assets/plugins/swal/sweetalert2.all.min.js')}}"></script>
     <script src="{{url('template/assets/plugins/fancybox/jquery.fancybox.js')}}"></script>
@@ -333,48 +328,31 @@
   }
 
   function gantiTema(tipe) {
-    var tipe1 = "dark-mode";
+    var tipe1 = "normal-mode";
     var tipe2 = "normal-mode";    
     localStorage["themes"] = "normal";
     if(tipe == 1){
       localStorage["themes"] = "dark";      
       tipe1 = "normal-mode";
-      tipe2 = "dark-mode";
+      tipe2 = "normal-mode";
     }
     setTheme(tipe,tipe1,tipe2);
   }
 
   function setTheme(tipe,tipe1,tipe2){
     $('.preloader').show();
-    $.getJSON(link+'/users/setThemeUser?dark='+tipe, function(data){      
-      $('.themes-mode-script').each(function(){
-        var newLink = $(this).attr('src').replace(tipe1,tipe2);
-        $(this).attr("src",newLink);
-      });
-      $('.themes-mode-css').each(function(){
-        var newLink = $(this).attr('href').replace(tipe1,tipe2);
-        $(this).attr("href",newLink);
-      });
-
-      var href = $('#theme').attr('href');
-      if(tipe == 1){
-        $('.chooseThemeDark').hide();
-        $('.chooseThemeLight').show();
-        $('html').css("background","#383f48");
-        $('#theme').attr('href',href.replace("blue.css","default-dark.css"));
-        $.Loading.setDefaults({ theme: 'dark'});
-      }else{
-        $('.chooseThemeDark').show();
-        $('.chooseThemeLight').hide();
-        $('html').css("background","#fff");
-        $('#theme').attr('href',href.replace("default-dark.css","blue.css"));
-        $.Loading.setDefaults({ theme: 'light'});
-      }
-      setTimeout(function(){
-        $('.preloader').hide();
-      },1000);
+    $.getJSON(link+'/users/setThemeUser?sandbox='+tipe, function(data){      
+      location.reload();
     });    
   }
+
+  const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+  })
 </script>
 @yield('javascript')
 </html>

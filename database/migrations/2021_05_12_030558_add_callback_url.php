@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDarkModeIntoUser extends Migration
+class AddCallbackUrl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddDarkModeIntoUser extends Migration
      */
     public function up()
     {
+        Schema::table('transaction', function ($table) {
+            $table->string('callback_url')->nullable()->default(null);
+        });
+
         Schema::table('users', function ($table) {
-            $table->integer('sandbox')->default(0);
+            $table->string('callback_url')->nullable()->default(null);
         });
     }
 

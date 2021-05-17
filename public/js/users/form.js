@@ -65,3 +65,59 @@ $('#formStaff').submit(function (e) {
         }
     });
 });
+
+function resetToken(){
+    Swal.fire({
+        title: 'Reset API Token?',
+        text: "",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.value) {
+            Swal.fire({
+                title: 'Loading..',
+                html: '',
+                allowOutsideClick: false,
+                onOpen: () => {
+                    swal.showLoading()
+                }
+            });
+            let link = $("meta[name=baseurl]").attr('content');
+            let token = $("meta[name='csrf-token']").attr('content');
+            $.post(link+"/users/reset_token",{
+                id : $("input[name='id']").val(),
+                _token : token
+            })
+            .done(function(response){
+                Swal.fire(
+                    'Reset Token berhasil',
+                    '',
+                    'success'
+                );
+                $("#api_token").val(response.api_token);
+            }).catch((err) => {
+                Swal.fire(
+                    'Proses gagal',
+                    '',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+function myFunction() {
+    var copyText = document.getElementById("api_token");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    
+    Toast.fire({
+        icon: 'success',
+        title: 'Copied'
+    });
+}

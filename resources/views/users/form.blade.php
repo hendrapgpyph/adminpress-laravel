@@ -1,6 +1,6 @@
  @extends('layouts.appweb')
   @section('title')
- BRIVA | Users
+  {{ config('app.name') }} | Users
  @endsection
  @section("content")
  <style type="text/css">
@@ -70,6 +70,62 @@
                     </div>
                   </div>
                 </div>
+                @if(isset($data->id))
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>API Token</label>
+                    <div class="input-group">
+                      <input type="text" id="api_token" class="form-control" value="{{isset($data->api_token)?$data->api_token:''}}" style="background: white;" readonly>
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-default" onclick="myFunction()">
+                          <i class="fa fa-copy"></i>
+                        </button>
+                        <button type="button" class="btn btn-default" onclick="resetToken()">
+                          <i class="fa fa-refresh"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endif
+                <div class="col-md-12">
+                  <hr>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Callback Settlement (Production)</label>
+                    <div class="controls">
+                      <input type="text" name="callback_url" class="form-control form-control-sm" value="{{isset($data->callback_url)?$data->callback_url:''}}" required>
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Callback Expired (Production)</label>
+                    <div class="controls">
+                      <input type="text" name="callback_expired" class="form-control form-control-sm" value="{{isset($data->callback_expired)?$data->callback_expired:''}}" required>
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-12">
+                  <hr>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Callback Settlement (Sandbox)</label>
+                    <div class="controls">
+                      <input type="text" name="callback_url_sb" class="form-control form-control-sm" value="{{isset($data->callback_url_sb)?$data->callback_url_sb:''}}" required>
+                    </div>
+                  </div>                
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Callback Expired (Sandbox)</label>
+                    <div class="controls">
+                      <input type="text" name="callback_expired_sb" class="form-control form-control-sm" value="{{isset($data->callback_expired_sb)?$data->callback_expired_sb:''}}" required>
+                    </div>
+                  </div>                
+                </div>
                 <div class="col-md-12">
                   <hr>
                 </div>
@@ -98,7 +154,7 @@
                       <button type="submit" class="btn btn-success">Simpan</button>
                     </div>
                     <div class="btn-group">
-                      <a href="{{url('/users')}}" class="btn btn-danger">Batal</a>
+                      <a href="javascript:history.back()" class="btn btn-danger">Batal</a>
                     </div>
                   </div>
                 </div>

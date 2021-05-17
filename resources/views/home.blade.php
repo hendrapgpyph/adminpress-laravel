@@ -1,6 +1,6 @@
 @extends('layouts.appweb')
 @section('title')
-Jinom BRIVA
+{{ config('app.name') }}
 @endsection
 @section("content")
 <!-- ============================================================== -->
