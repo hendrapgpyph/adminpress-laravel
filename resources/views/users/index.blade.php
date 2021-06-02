@@ -1,6 +1,6 @@
  @extends('layouts.appweb')
   @section('title')
- CRO App | Users
+ Users
  @endsection
  @section("content")
  <!-- ============================================================== -->

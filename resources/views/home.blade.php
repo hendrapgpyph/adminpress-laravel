@@ -1,6 +1,6 @@
 @extends('layouts.appweb')
 @section('title')
-Jinom BRIVA
+Dashboard
 @endsection
 @section("content")
 <!-- ============================================================== -->

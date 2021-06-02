@@ -12,7 +12,7 @@
     <meta name="baseurl" content="{{url('/')}}">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{url('template/assets/images/favicon.png')}}">
-    <title>@yield('title')</title>
+    <title>{{ config('app.name', 'Laravel') }} | @yield('title')</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{url('template/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{url('template/assets/plugins/wizard/steps.css')}}" type="text/css">
@@ -21,7 +21,7 @@
     <!-- Custom CSS -->
     <link href='{{url("template/".(Auth::User()->dark_mode == 1?'dark-mode':'normal-mode')."/css/style.css")}}' class="themes-mode-css" rel="stylesheet">
     <!-- You can change the theme colors from here -->
-    <link href="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/css/colors/'.(Auth::User()->dark_mode == 1?'default-dark':'blue').'.css')}}" class="themes-mode-css" id="theme" rel="stylesheet">
+    <link href="{{url('template/'.(Auth::User()->dark_mode == 1?"dark-mode":"normal-mode").'/css/colors/'.(Auth::User()->dark_mode == 1?'default-dark':'red').'.css')}}" class="themes-mode-css" id="theme" rel="stylesheet">
     <link href="{{url('template/assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="{{url('template/assets/plugins/fancybox/jquery.fancybox.css')}}">
     <link rel="stylesheet" href="{{url('template/assets/plugins/select2/dist/css/select2.min.css')}}" type="text/css" />
@@ -91,11 +91,16 @@
                             <img src="{{url('template/assets/images/logo-light-icon.png')}}" alt="homepage" class="light-logo" />
                         </b>
                         <!--End Logo icon -->
-                        <!-- Logo text --><span>
+                        <!-- Logo text -->
+                        <span>
                          <!-- dark Logo text -->
-                         <img src="{{url('/template/assets/images/logo-text.png')}}" alt="homepage" class="dark-logo" />
+                         {{-- <img src="{{url('/template/assets/images/logo-text.png')}}" alt="homepage" class="dark-logo" /> --}}
                          <!-- Light Logo text -->    
-                         <img src="{{url('/template/assets/images/logo-light-text.png')}}" class="light-logo" alt="homepage" /></span> </a>
+                         {{-- <img src="{{url('/template/assets/images/logo-light-text.png')}}" class="light-logo" alt="homepage" /> --}}
+                         <h3 style="display: {{Auth::User()->dark_mode == 1?'inline-block;':'none;'}}" class="dark-logo-title ml-2">Project</h3>
+                         <h3 style="display: {{Auth::User()->dark_mode == 0?'inline-block;':'none;'}}" class="light-logo-title ml-2">Project</h3>
+                         </span>
+                        </a> 
                 </div>
                 <!-- ============================================================== -->
                 <!-- End Logo -->
@@ -361,14 +366,18 @@
         $('.chooseThemeDark').hide();
         $('.chooseThemeLight').show();
         $('html').css("background","#383f48");
-        $('#theme').attr('href',href.replace("blue.css","default-dark.css"));
+        $('#theme').attr('href',href.replace("red.css","default-dark.css"));
         $.Loading.setDefaults({ theme: 'dark'});
+        $(".dark-logo-title").css('display','inline-block');
+        $(".light-logo-title").css('display','none');
       }else{
         $('.chooseThemeDark').show();
         $('.chooseThemeLight').hide();
         $('html').css("background","#fff");
-        $('#theme').attr('href',href.replace("default-dark.css","blue.css"));
+        $('#theme').attr('href',href.replace("default-dark.css","red.css"));
         $.Loading.setDefaults({ theme: 'light'});
+        $(".light-logo-title").css('display','inline-block');
+        $(".dark-logo-title").css('display','none');
       }
       setTimeout(function(){
         $('.preloader').hide();
