@@ -71,7 +71,7 @@
                   </div>
                 </div>
                 @if(isset($data->id))
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <div class="form-group">
                     <label>API Token</label>
                     <div class="input-group">
@@ -88,41 +88,41 @@
                   </div>
                 </div>
                 @endif
-                <div class="col-md-12">
+                <div class="col-md-12" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <hr>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <div class="form-group">
                     <label>Callback Settlement (Production)</label>
                     <div class="controls">
-                      <input type="text" name="callback_url" class="form-control form-control-sm" value="{{isset($data->callback_url)?$data->callback_url:''}}" required>
+                      <input type="text" name="callback_url" class="form-control form-control-sm" value="{{isset($data->callback_url)?$data->callback_url:''}}">
                     </div>
                   </div>                
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <div class="form-group">
                     <label>Callback Expired (Production)</label>
                     <div class="controls">
-                      <input type="text" name="callback_expired" class="form-control form-control-sm" value="{{isset($data->callback_expired)?$data->callback_expired:''}}" required>
+                      <input type="text" name="callback_expired" class="form-control form-control-sm" value="{{isset($data->callback_expired)?$data->callback_expired:''}}">
                     </div>
                   </div>                
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <hr>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <div class="form-group">
                     <label>Callback Settlement (Sandbox)</label>
                     <div class="controls">
-                      <input type="text" name="callback_url_sb" class="form-control form-control-sm" value="{{isset($data->callback_url_sb)?$data->callback_url_sb:''}}" required>
+                      <input type="text" name="callback_url_sb" class="form-control form-control-sm" value="{{isset($data->callback_url_sb)?$data->callback_url_sb:''}}">
                     </div>
                   </div>                
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="display: {{isset($data->role) && $data->role =='master'?'none':''}}">
                   <div class="form-group">
                     <label>Callback Expired (Sandbox)</label>
                     <div class="controls">
-                      <input type="text" name="callback_expired_sb" class="form-control form-control-sm" value="{{isset($data->callback_expired_sb)?$data->callback_expired_sb:''}}" required>
+                      <input type="text" name="callback_expired_sb" class="form-control form-control-sm" value="{{isset($data->callback_expired_sb)?$data->callback_expired_sb:''}}">
                     </div>
                   </div>                
                 </div>

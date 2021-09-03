@@ -25,7 +25,7 @@ class BrivaController extends Controller
             $this->type_api = "sandbox";
         }else{
             $response["status"] = false;
-            $response["message"] = "URI not found";
+            $response["errDesc"] = "URI not found";
             return response()->json($response);
         }
     }
@@ -35,15 +35,18 @@ class BrivaController extends Controller
         try {
             DB::beginTransaction();
             $name           = $req->name;
-            $amount         = $req->amount;
+            $amount         = (int)$req->amount;
             $keterangan     = $req->get('keterangan',null);
             $expiredDate    = $req->get('expired',null);
+            $customerCode   = $req->get('customerCode',null);
             
-            do {
-                $customerCode   = date('y').rand(10,99).date('m').rand(0,9).date('d').rand(100,999);
-                $response = $this->briva->BrivaCreate($customerCode,$name,$amount,$keterangan,$expiredDate);
-            } while (isset($response['responseCode']) && $response['responseCode'] == 13);
-
+            if($customerCode == null){
+                do {
+                    $customerCode   = date('y').rand(10,99).date('m').rand(0,9).date('d').rand(100,999);
+                    $response = $this->briva->BrivaCreate($customerCode,$name,$amount,$keterangan,$expiredDate);
+                } while (isset($response['responseCode']) && $response['responseCode'] == 13);
+            }
+            
             if(
                 isset($response['status']) && $response['status']
                 && isset($response['responseDescription']) && $response['responseDescription'] == "Success"
@@ -68,11 +71,15 @@ class BrivaController extends Controller
                 }else{
                     Transactionsb::create($insert);
                 }
+            }else{
+                $response['status'] = false;
+                $response['errDesc'] = (isset($response['errDesc']) ? $response['errDesc'] : "Terjadi Kesalahan saat mengakses BRIVA");
             }
+
             DB::commit();
         }catch(\Exception $e) {
             $response["status"] = false;
-            $response["message"] = $e->getMessage();
+            $response["errDesc"] = $e->getMessage();
             DB::rollBack();
         }
         
@@ -97,9 +104,9 @@ class BrivaController extends Controller
             ){
                 $data = $response['data'];
                 if($this->type_api == 'production'){
-                    $trans = Transaction::where('custCode', $data['custCode'])->first();
+                    $trans = Transaction::where('custCode', $data['custCode'])->where('statusBayar','N')->first();
                 }else{
-                    $trans = Transactionsb::where('custCode', $data['custCode'])->first();
+                    $trans = Transactionsb::where('custCode', $data['custCode'])->where('statusBayar','N')->first();
                 }
                 if($trans != null){
                     $trans->institutionCode = $data['institutionCode'];
@@ -110,13 +117,35 @@ class BrivaController extends Controller
                     $trans->keterangan = $data['keterangan'];
                     $trans->expiredDate = $data['expiredDate'];
                     $trans->save();
+                }else{
+                    $insert = [
+                        'institutionCode' => $data['institutionCode'],
+                        'brivaNo' => $data['brivaNo'],
+                        'custCode' => $data['custCode'],
+                        'nama' => $data['nama'],
+                        'amount' => (int)$data['amount'],
+                        'keterangan' => $data['keterangan'],
+                        'expiredDate' => $data['expiredDate'],
+                        'created_by' => Auth::User()->id,
+                        'callback_url' => ($this->type_api == 'production'?Auth::User()->callback_url:Auth::User()->callback_url_sb),
+                        'callback_expired' => ($this->type_api == 'production'?Auth::User()->callback_expired:Auth::User()->callback_expired_sb)
+                    ];
+
+                    if($this->type_api == 'production'){
+                        $trans = Transaction::create([$insert]);
+                    }else{
+                        $trans = Transactionsb::create([$insert]);
+                    }
                 }
+            }else{
+                $response['status'] = false;
+                $response['errDesc'] = (isset($response['errDesc']) ? $response['errDesc'] : "Terjadi Kesalahan saat mengakses BRIVA");
             }
 
             DB::commit();
         }catch(\Exception $e) {
             $response["status"] = false;
-            $response["message"] = $e->getMessage();
+            $response["errDesc"] = $e->getMessage();
             DB::rollBack();
         }
 
@@ -145,12 +174,15 @@ class BrivaController extends Controller
                     $trans->paymentDate = date('Y-m-d H:i:s');
                     $trans->save();
                 }
+            }else{
+                $response['status'] = false;
+                $response['errDesc'] = (isset($response['errDesc']) ? $response['errDesc'] : "Terjadi Kesalahan saat mengakses BRIVA");
             }
 
             DB::commit();
         }catch(\Exception $e) {
             $response["status"] = false;
-            $response["message"] = $e->getMessage();
+            $response["errDesc"] = $e->getMessage();
             DB::rollBack();
         }
         return response()->json($response);
@@ -180,12 +212,30 @@ class BrivaController extends Controller
                     $trans->no_rek = NULL;
                     $trans->save();
                 }
+            }else{
+                $response['status'] = false;
+                $response['errDesc'] = (isset($response['errDesc']) ? $response['errDesc'] : "Terjadi Kesalahan saat mengakses BRIVA");
             }
             
             DB::commit();
         }catch(\Exception $e) {
             $response["status"] = false;
-            $response["message"] = $e->getMessage();
+            $response["errDesc"] = $e->getMessage();
+            DB::rollBack();
+        }
+        return response()->json($response);
+    }
+
+    public function getDetail(Request $req)
+    {
+        try {
+            DB::beginTransaction();
+            $customerCode   = $req->customercode;
+            $response = $this->briva->BrivaGet($customerCode);
+            DB::commit();
+        }catch(\Exception $e) {
+            $response["status"] = false;
+            $response["errDesc"] = $e->getMessage();
             DB::rollBack();
         }
         return response()->json($response);
@@ -212,11 +262,14 @@ class BrivaController extends Controller
                     $trans->deleted_at = date('Y-m-d H:i:s');
                     $trans->save();
                 }
+            }else{
+                $response['status'] = false;
+                $response['errDesc'] = (isset($response['errDesc']) ? $response['errDesc'] : "Terjadi Kesalahan saat mengakses BRIVA");
             }
             DB::commit();
         }catch(\Exception $e) {
             $response["status"] = false;
-            $response["message"] = $e->getMessage();
+            $response["errDesc"] = $e->getMessage();
             DB::rollBack();
         }
         return response()->json($response);
@@ -226,16 +279,12 @@ class BrivaController extends Controller
     {
         // get settlement payment BRIVA
         $response = $this->briva->getReportBriva();
+        
         if(
             isset($response['status']) && $response['status']
             && isset($response['responseDescription']) && $response['responseDescription'] == "Success"
             && isset($response['data'])
         ){
-            if(
-                isset($response['status']) && $response['status']
-                && isset($response['responseDescription']) && $response['responseDescription'] == "Success"
-                && isset($response['data'])
-            ){
                 $data = $response['data'];
                 if($this->type_api == 'production'){
                     $transaction = Transaction::where('statusBayar','N')->get();
@@ -246,12 +295,17 @@ class BrivaController extends Controller
                 foreach ($transaction as $key => $val) {
                     $array[] = $val->custCode;
                 }
+                
                 foreach ($data as $key => $value) {
                     if(in_array($value['custCode'], $array)){
                         if($this->type_api == 'production'){
-                            $trans = Transaction::where('custCode', $value['custCode'])->first();
+                            $trans = Transaction::where('custCode', $value['custCode'])
+                                    ->where('statusBayar','N')
+                                    ->first();
                         }else{
-                            $trans = Transactionsb::where('custCode', $value['custCode'])->first();
+                            $trans = Transactionsb::where('custCode', $value['custCode'])
+                                    ->where('statusBayar','N')
+                                    ->first();
                         }
                         if($trans != null){
                             // add status settlement
@@ -265,14 +319,14 @@ class BrivaController extends Controller
                         }
                     }
                 }
-            }
+            
         }
 
         // get expired payment
         if($this->type_api == 'production'){
-            $transaction = Transaction::where('expiredDate','<',date('Y-m-d H:i:s'))->where('statusBayar','N')->get();
+            $transaction = Transaction::where('expiredDate','<',date('Y-m-d H:i:s'))->where('expired',0)->where('statusBayar','N')->get();
         }else{
-            $transaction = Transactionsb::where('expiredDate','<',date('Y-m-d H:i:s'))->where('statusBayar','N')->get();
+            $transaction = Transactionsb::where('expiredDate','<',date('Y-m-d H:i:s'))->where('expired',0)->where('statusBayar','N')->get();
         }
         foreach ($transaction as $key => $val) {
             $send = [];

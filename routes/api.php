@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth:api']], function (){
 	    Route::post('/{type}/status/unpaid', 'BrivaController@unpaidInvoice')->name('briva.invoice.unpaid');
 	    Route::post('/{type}/delete', 'BrivaController@deleteInvoice')->name('briva.invoice.delete');
         Route::get('/{type}/getUpdate', 'BrivaController@getUpdate')->name('briva.getupdate');
-
+        Route::post('/{type}/getDetail', 'BrivaController@getDetail')->name('briva.getDetail');
 	});
 });
 

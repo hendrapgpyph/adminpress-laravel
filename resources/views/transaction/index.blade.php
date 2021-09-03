@@ -40,10 +40,10 @@
             <div class="col-md-9">
                 <div class="row">
                     <div class="col-md-5">
-                        <select class="form-control form-control-sm" id="user_id">
+                        <select class="form-control form-control-sm" id="user_id" onchange="changeUser()">
                             <option value="">Seluruh</option>
                             @foreach ($user as $val)
-                                <option value="{{$val->id}}">{{$val->name}}</option>
+                                <option value="{{$val->id}}" {{$val->id == Auth::User()->id?'selected':''}}>{{$val->name}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -54,22 +54,40 @@
             </div>
             <div class="col-md-12 tableTransaksi">
               <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-12">
                   <div class="row">
-                    <div class="col-md-5">
-                      <div class="input-group">
-                        <input type="text" class="form-control form-control-sm" placeholder="Cari...." id="cariTransaksi">
-                        <div class="input-group-append">
-                          <button type="button" class="btn btn-info btn-sm" onclick="cariTransaksi()"><i class="fa fa-search"></i></button>
-                        </div>
-                      </div>
+                    <div class="col-md-4">
+                      <input class="form-control form-control-sm input-daterange-datepicker" autocomplete="off" id="daterange" type="text" name="daterange" value="" placeholder="Range tanggal.." />
                     </div>
-                    <div class="col-md-5">
-                        <input class="form-control form-control-sm input-daterange-datepicker" id="daterange" type="text" name="daterange" value="" placeholder="Masukkan range tanggal.." />
+                    <div class="col-md-3">
+                      <select class="form-control form-control-sm" id="status" onchange="cariTransaksi()">
+                        <option value="">Seluruh status</option>
+                        <option value="pending">Pending</option>
+                        <option value="settlement">Settlement</option>
+                        <option value="expired">Expired</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-control form-control-sm" id="status_callback" onchange="cariTransaksi()">
+                        <option value="">Seluruh callback</option>
+                        <option value="success">Callback Success</option>
+                        <option value="fail">Callback Fail</option>
+                      </select>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-12">
+                  <hr>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Cari...." id="cariTransaksi">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-info btn-sm" onclick="cariTransaksi()"><i class="fa fa-search"></i></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
                    <div class="mailbox-controls">
                       <div class="float-right">                    
                       <span id="displayPage">0-0/0</span>
@@ -85,10 +103,12 @@
                       <thead>
                         <tr>
                           <th>No</th>
-                          <th>Nama</th>
-                          <th>Telepon</th>
-                          <th>Api Token</th>
-                          <th>Actions</th>
+                          <th>BrivaNo</th>
+                          <th>Name</th>
+                          <th>Amount</th>
+                          <th>Expired</th>
+                          <th><center>Status</center></th>
+                          <th><center>Callback</center></th>
                         </tr>
                       </thead>
                       <tbody id="tbodyListTransaksi">

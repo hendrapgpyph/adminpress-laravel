@@ -35,7 +35,7 @@
             <h4 class="card-title m-b-0">List Users</h4></div>
           <div class="card-body collapse show">
             <div class="row">
-              @if(Auth::user()->role == "Admin")
+              {{-- @if(Auth::user()->role == "Admin") --}}
                 <div class="col-12">
                   <div class="btn-group float-right">
                     <a href="{{url('/users/form')}}" class="btn btn-sm btn-info">
@@ -43,7 +43,7 @@
                     </a>
                   </div>
                 </div>
-              @endif
+              {{-- @endif --}}
               <div class="col-md-12">
                 <br>
               </div>

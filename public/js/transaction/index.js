@@ -133,12 +133,52 @@ function setPaging(show,between){
     var awal  = no;
     var cari = $('#cariTransaksi').val();
     let range = $("#daterange").val();
-    $.getJSON(link+'/transaction/jsonListTransaksi?page='+page+'&cari='+cari+"&range="+range,function(data){
-        console.log(data)
+    let status = $("#status").val();
+    let status_callback = $("#status_callback").val();
+    let user = $("#user_id").val();
+
+    $.getJSON(link+'/transaction/jsonListTransaksi?page='+page+'&cari='+cari+"&range="+range+"&status="+status+"&status_callback="+status_callback+"&user="+user,function(data){
         jumlahSeluruh = data.total;
         pageTotal = parseInt(Math.ceil(jumlahSeluruh/20));
         $.each(data.data, function(key, val){
-
+            txt += `<tr>
+                      <td>${no}</td>
+                      <td>
+                        <a href="${link+'/transaction/detail/'+val.id}">${val.brivaNo+"-"+val.custCode}</a>`;
+              if($("#user_id").val() == null || $("#user_id").val() == ""){
+                txt += `<br>${val.nama_user}`;
+              }
+                txt += `<br><i style="font-size: 10px;">${val.created_at}</i>
+                      </td>`;
+            txt += `<td>
+                        <a href="${link+'/transaction/detail/'+val.id}">${val.nama}</a><br>
+                          <i style="font-size : 10px;">${val.keterangan}</i>
+                      </td>
+                      <td>
+                        Rp. ${number_format(val.amount)}
+                      </td>
+                      <td>
+                        ${val.expiredDate}
+                      </td>
+                      <td align="center">`;
+            if(val.expired == 1){
+              txt += `<a href="#!" class="badge badge-danger">Expired</a>`;
+            }else if(val.statusBayar == 'Y'){
+              txt += `<a href="#!" class="badge badge-success">Settlement</a>`;
+            }else if(val.statusBayar == 'N'){
+              txt += `<a href="#!" class="badge badge-warning">Pending</a>`;
+            }
+            txt += `</td>
+                    <td align="center">`;
+            if(val.status_callback == 'success'){
+              txt += `<a href="#!" class="badge badge-success">Success</a>`;
+            }else if(val.status_callback == 'fail'){
+              txt += `<a href="#!" class="badge badge-danger">Fail</a>`;
+            }else{
+              txt += `-`;
+            }
+            txt += `</td>
+                    </tr>`;
             indexContent = no;
             no++;
       });
@@ -150,7 +190,7 @@ function setPaging(show,between){
       // $('[data-toggle="tooltip"]').tooltip();
       setPaging(5,2);
       if (jumlahSeluruh == 0) {
-        $('#tbodyListTransaksi').html("<td colspan='4'><center>Data tidak ditemukan</center></td>");
+        $('#tbodyListTransaksi').html("<td colspan='8'><center>Data tidak ditemukan</center></td>");
       }
     });
   }
@@ -165,3 +205,8 @@ function setPaging(show,between){
         $('input[name="daterange"]').val(date_1.format('YYYY/MM/DD')+" - "+date_2.format('YYYY/MM/DD'));
         cariTransaksi();
 });
+
+
+function changeUser(){
+  cariTransaksi();
+}

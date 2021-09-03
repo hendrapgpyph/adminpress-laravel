@@ -28,7 +28,7 @@ class ProcessBriva implements ShouldQueue
         $this->data     = $data;
         $this->type     = $type;
         $this->type_api = $type_api;
-        $this->handle();
+        // $this->handle();
     }
 
     /**
@@ -42,9 +42,13 @@ class ProcessBriva implements ShouldQueue
             DB::beginTransaction();
             $params = $this->data;
             if($this->type_api == 'production'){
-                $trans = Transaction::where('custCode', $params['custCode'])->first();
+                $trans = Transaction::where('custCode', $params['custCode'])
+                        ->where('statusBayar','N')
+                        ->first();
             }else{
-                $trans = Transactionsb::where('custCode', $params['custCode'])->first();
+                $trans = Transactionsb::where('custCode', $params['custCode'])
+                        ->where('statusBayar','N')
+                        ->first();
             }
             if($trans != null){
                 $callback_url = null;
@@ -68,10 +72,11 @@ class ProcessBriva implements ShouldQueue
                     curl_setopt($chPost, CURLOPT_RETURNTRANSFER, true);
                     $resultPost = curl_exec($chPost);
                     $resultPost = json_decode($resultPost);
+                    $httpcode = curl_getinfo($chPost, CURLINFO_HTTP_CODE);
                     curl_close($chPost);
                     
                     // update callback
-                    if(isset($resultPost->status) && $resultPost->status == 200){
+                    if($httpcode == 200){
                         $trans->status_callback = 'success';
                     }else{
                         $trans->status_callback = 'fail';

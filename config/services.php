@@ -35,14 +35,16 @@ return [
     ],
 
     'briva' => [
-        "client_id" => "MtrslSsfJGIOWXIuhol3Jw0iGv2qcbEc",
-        "secret_id" => "edNlUdDXzRXA9InW",
         'production' => [
+            "client_id" => "VsHgJYElKYBLPRQGfevmX7OvuoGs35HL",
+            "secret_id" => "SxLAVMxDLWzNTsGl",
             'institutionCode' => "ALPCR7697K7",
             'url' => "https://partner.api.bri.co.id",
             'coorporate_code' => "12605"
         ],
         'sandbox' => [
+            "client_id" => "MtrslSsfJGIOWXIuhol3Jw0iGv2qcbEc",
+            "secret_id" => "edNlUdDXzRXA9InW",
             'institutionCode' => "J104408",
             'url' => "https://sandbox.partner.api.bri.co.id",
             'coorporate_code' => "77777"

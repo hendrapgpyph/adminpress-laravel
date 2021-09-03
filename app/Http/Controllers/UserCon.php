@@ -27,14 +27,19 @@ class UserCon extends Controller
 					->orWhere('email','LIKE','%'.$search.'%');
 			});
 		}
+		$user = $user->where('role','admin');
       	$user = $user->paginate(10);
     	return response()->json($user);
     }
 
     public function form(Request $req)
     {
-    	$id = ($req->id != null ? $req->id : Auth::User()->id);
-    	$data = User::find($id);
+    	$id = $req->id;
+		if($id != null){
+			$data = User::find($id);
+		}else{
+			$data = null;
+		}
       
     	return view('users.form')->with('data',$data);
     }
@@ -100,6 +105,7 @@ class UserCon extends Controller
 			$data['api_token'] = Str::random(60);
     		$data["created_at"] = date('Y-m-d H:i:s');
     		$data["updated_at"] = date('Y-m-d H:i:s');    		
+    		$data["role"] = 'admin';    		
     		DB::table('users')->insert($data);
 
     		// response

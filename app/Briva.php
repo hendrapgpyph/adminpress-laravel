@@ -20,15 +20,16 @@ class Briva extends Model
 	function __construct($sandbox)
 	{
 		parent::__construct();
-		$this->timestamp = date("Y-m-d\TH:i:s.000\Z");
+		$this->timestamp = date("Y-m-d\TH:i:s.000\Z", strtotime("-8 hour", strtotime(date("Y-m-d H:i:s"))));
+        // dd($this->timestamp);
         $this->sandbox = $sandbox;
         $this->setVariable();
 	}
 
     public function setVariable()
     {
-        $this->client_id = config('services')["briva"]["client_id"];
-        $this->secret_id = config('services')["briva"]["secret_id"];
+        $this->client_id = config('services')["briva"][($this->sandbox == 1?"sandbox":"production")]["client_id"];
+        $this->secret_id = config('services')["briva"][($this->sandbox == 1?"sandbox":"production")]["secret_id"];
         
         $this->institutionCode = config("services")["briva"][($this->sandbox == 1?"sandbox":"production")]["institutionCode"];
         $this->url = config("services")["briva"][($this->sandbox == 1?"sandbox":"production")]["url"];
@@ -169,7 +170,7 @@ class Briva extends Model
         $keterangan="$keterangan";
         $expiredDate="$expiredDate";
         if ($expiredDate == null) {
-        	$expiredDate = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + 60*60*24);
+        	$expiredDate = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + 60*60);
         }
 
         $datas = array('institutionCode' => $institutionCode ,

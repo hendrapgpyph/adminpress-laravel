@@ -14,10 +14,10 @@ class AddCreateByOnTransaction extends Migration
     public function up()
     {
         Schema::table('transaction', function ($table) {
-            $table->datetime('created_by')->nullable()->default(null);
+            $table->integer('created_by')->nullable()->default(null);
         });
         Schema::table('transaction_sb', function ($table) {
-            $table->datetime('created_by')->nullable()->default(null);
+            $table->integer('created_by')->nullable()->default(null);
         });
     }
 

@@ -25,7 +25,8 @@ class User extends Authenticatable
         'callback_expired_sb',
         'sandbox',
         'foto',
-        'telepon'
+        'telepon',
+        'role'
     ];
 
     /**

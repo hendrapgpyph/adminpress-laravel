@@ -40,9 +40,25 @@ Route::group(['middleware' => ['web','auth']], function (){
 		Route::get('/','UserCon@form')->name('profile');
 	});
 
+	// Profile
+	Route::prefix('home')->group(function() {
+		Route::get('/','HomeController@index')->name('dashboard.index');
+		Route::get('/data_dashboard/','HomeController@dataDashboard')->name('dashboard.data');
+		Route::get('/grafik_transaction/','HomeController@grafikTransaction')->name('dashboard.grafik');
+	});
+
 	// Transaction
 	Route::prefix('transaction')->group(function() {
 		Route::get('/','TransactionController@index');
+		Route::get('/detail/{id}','TransactionController@detail');
+		Route::post('/update_callback','TransactionController@updateCallback');
+		Route::post('/callback_again','TransactionController@callbackAgain');
+		Route::post('/delete_transaction','TransactionController@deleteTransaction');
 		Route::get('/jsonListTransaksi', 'TransactionController@jsonListTransaksi');
+	});
+
+	// Documentation
+	Route::prefix('doc')->group(function() {
+		Route::get('/','DocumentationCon@index');
 	});
 });
